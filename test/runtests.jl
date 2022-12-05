@@ -34,3 +34,8 @@ using AbstractFFTs: complexfloat, realfloat
     # c = x -> dct([x; 0; 0])[1]
     # @test derivative(c,0.1) ≈ 1
 end
+
+@testset "r2r" begin
+    f = ω -> FFTW.r2r([ω; zeros(9)], FFTW.R2HC)[1]
+    @test derivative(f, 0.1) ≡ 1.0
+end

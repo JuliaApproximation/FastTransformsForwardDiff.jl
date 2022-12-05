@@ -53,13 +53,8 @@ end
 
 for P in [:Plan, :ScaledPlan]  # need ScaledPlan to avoid ambiguities
     @eval begin
-
-        Base.:*(p::AbstractFFTs.$P, x::AbstractArray{<:Dual}) =
-            _apply_plan(p, x)
-
-        Base.:*(p::AbstractFFTs.$P, x::AbstractArray{<:Complex{<:Dual}}) =
-            _apply_plan(p, x)
-
+        Base.:*(p::AbstractFFTs.$P, x::AbstractArray{<:Dual}) = _apply_plan(p, x)
+        Base.:*(p::AbstractFFTs.$P, x::AbstractArray{<:Complex{<:Dual}}) = _apply_plan(p, x)
     end
 end
 
@@ -68,14 +63,34 @@ function _apply_plan(p::AbstractFFTs.Plan, x::AbstractArray)
     dxtils = ntuple(npartials(eltype(x))) do n
         p * partials.(x, n)
     end
-    __apply_plan(tagtype(eltype(x)), xtil, dxtils)
+    __apply_plan(eltype(x), xtil, dxtils)
 end
 
-function __apply_plan(T, xtil, dxtils)
+function __apply_plan(Ti::Type{<:Complex}, xtil, dxtils)
+    T = tagtype(Ti)
     map(xtil, dxtils...) do val, parts...
         Complex(
             Dual{T}(real(val), map(real, parts)),
             Dual{T}(imag(val), map(imag, parts)),
         )
+    end
+end
+
+function __apply_plan(Ti::Type{<:Real}, xtil, dxtils)
+    T = tagtype(Ti)
+    map(xtil, dxtils...) do val, parts...
+        Dual{T}(val, parts)
+    end
+end
+
+
+for f in (:r2r, :r2r!)
+    pf = Symbol("plan_", f)
+    @eval begin
+        $f(x::AbstractArray{<:Dual}, kinds) = $pf(x, kinds) * x
+        $f(x::AbstractArray{<:Dual}, kinds, region) = $pf(x, kinds, region) * x
+        $pf(x::AbstractArray{<:Dual}, kinds, region; kws...) = $pf(value.(x), kinds, region; kws...)
+        $f(x::AbstractArray{<:Complex{<:Dual}}, kinds, region=1:ndims(x)) = $pf(x, kinds) * x
+        $pf(x::AbstractArray{<:Complex{<:Dual}}, kinds, region; kws...) = $pf(value.(x), kinds, region; kws...)
     end
 end
