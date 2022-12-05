@@ -1,0 +1,20 @@
+name = "FastTransformsForwardDiff"
+uuid = "77fa7db0-1c81-401d-9fde-3592fc42b8bc"
+authors = ["Sheehan Olver <solver@mac.com>"]
+version = "0.0.1"
+
+[deps]
+AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+
+[compat]
+AbstractFFTs = "1"
+FFTW = "1"
+ForwardDiff = "0.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
+
+[targets]
+test = ["Test", "FFTW"]
