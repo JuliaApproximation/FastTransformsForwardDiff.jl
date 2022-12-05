@@ -87,10 +87,13 @@ end
 for f in (:r2r, :r2r!)
     pf = Symbol("plan_", f)
     @eval begin
-        $f(x::AbstractArray{<:Dual}, kinds) = $pf(x, kinds) * x
-        $f(x::AbstractArray{<:Dual}, kinds, region) = $pf(x, kinds, region) * x
-        $pf(x::AbstractArray{<:Dual}, kinds, region; kws...) = $pf(value.(x), kinds, region; kws...)
-        $f(x::AbstractArray{<:Complex{<:Dual}}, kinds, region=1:ndims(x)) = $pf(x, kinds) * x
-        $pf(x::AbstractArray{<:Complex{<:Dual}}, kinds, region; kws...) = $pf(value.(x), kinds, region; kws...)
+        $f(x::AbstractArray{<:Dual}, kinds, region...) = $pf(x, kinds, region...) * x
+        $pf(x::AbstractArray{<:Dual}, kinds, region...; kws...) = $pf(value.(x), kinds, region...; kws...)
+        $f(x::AbstractArray{<:Complex{<:Dual}}, kinds, region...) = $pf(x, kinds, region...) * x
+        $pf(x::AbstractArray{<:Complex{<:Dual}}, kinds, region...; kws...) = $pf(value.(x), kinds, region...; kws...)
     end
 end
+
+
+
+mul!(y::AbstractArray{<:Dual}, p::Plan, x::AbstractArray{<:Dual}) = copyto!(y, p*x)
