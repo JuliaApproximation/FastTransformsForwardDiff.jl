@@ -29,12 +29,13 @@ plan_r2r(x::AbstractArray{<:Complex{<:Dual}}, FLAG, dims=1:ndims(x)) = plan_r2r(
 
 for plan in (:plan_irfft, :plan_brfft)  # these take an extra argument, only when complex?
     @eval begin
-        $plan(x::AbstractArray{<:Dual}, region=1:ndims(x)) = $plan(dual2array(x), 1 .+ dims)
-        $plan(x::AbstractArray{<:Complex{<:Dual}}, d::Integer, region=1:ndims(x)) = $plan(dual2array(x), d, region)
+        $plan(x::AbstractArray{<:Dual}, dims=1:ndims(x)) = $plan(dual2array(x), 1 .+ dims)
+        $plan(x::AbstractArray{<:Complex{<:Dual}}, d::Integer, dims=1:ndims(x)) = $plan(dual2array(x), d, 1 .+ dims)
     end
 end
 
 r2r(x::AbstractArray{<:Dual}, kinds, region...) = plan_r2r(x, kinds, region...) * x
+r2r(x::AbstractArray{<:Complex{<:Dual}}, kinds, region...) = plan_r2r(x, kinds, region...) * x
 
 
 for P in (:Plan, :ScaledPlan)  # need ScaledPlan to avoid ambiguities
