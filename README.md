@@ -3,7 +3,7 @@ A Julia package to support forward-mode auto-differentiation for fast transforms
 
 
 [![Build Status](https://github.com/JuliaApproximation/FastTransformsForwardDiff.jl/workflows/CI/badge.svg)](https://github.com/JuliaApproximation/FastTransformsForwardDiff.jl/actions)
-[![codecov](https://codecov.io/gh/JuliaApproximation/FastTransformsForwardDiff.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaApproximation/FastTransformsForwardDiff.jl)
+[![codecov](https://codecov.io/gh/JuliaApproximation/FastTransformsForwardDiff.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaApproximation/FastTransformsForwardDiff.jl)
 
 
 A package for forward-mode auto-differentiation for fast transforms. Currently supports the fft:
