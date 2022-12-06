@@ -1,4 +1,4 @@
-using FastTransformsForwardDiff, FFTW, Test
+using FastTransformsForwardDiff, FFTW, LinearAlgebra, Test
 using ForwardDiff: Dual, valtype, value, partials, derivative
 using AbstractFFTs: complexfloat, realfloat
 
