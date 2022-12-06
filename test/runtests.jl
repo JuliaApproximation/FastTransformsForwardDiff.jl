@@ -35,6 +35,21 @@ using AbstractFFTs: complexfloat, realfloat
 
     # c = x -> dct([x; 0; 0])[1]
     # @test derivative(c,0.1) ≈ 1
+
+    @testset "matrix" begin
+        A = x1 * (1:10)'
+        @test value.(fft(A)) == fft(value.(A))
+        @test partials.(fft(A), 1) == fft(partials.(A, 1))
+        @test partials.(fft(A), 2) == fft(partials.(A, 2))
+
+        @test value.(fft(A, 1)) == fft(value.(A), 1)
+        @test partials.(fft(A, 1), 1) == fft(partials.(A, 1), 1)
+        @test partials.(fft(A, 1), 2) == fft(partials.(A, 2), 1)
+
+        @test value.(fft(A, 2)) == fft(value.(A), 2)
+        @test partials.(fft(A, 2), 1) == fft(partials.(A, 1), 2)
+        @test partials.(fft(A, 2), 2) == fft(partials.(A, 2), 2)
+    end
 end
 
 @testset "r2r" begin
