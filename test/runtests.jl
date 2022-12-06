@@ -8,6 +8,7 @@ using AbstractFFTs: complexfloat, realfloat
 
     @test value.(x1) == 1:4
     @test partials.(x1, 1) == 2:5
+    @test partials.(x1, 2) == 3:6
 
     @test complexfloat(x1)[1] === complexfloat(x1[1]) === Dual(1.0, 2.0, 3.0) + 0im
     @test realfloat(x1)[1] === realfloat(x1[1]) === Dual(1.0, 2.0, 3.0)
@@ -17,6 +18,7 @@ using AbstractFFTs: complexfloat, realfloat
     @testset "$f" for f in [fft, ifft, rfft, bfft]
         @test value.(f(x1)) == f(value.(x1))
         @test partials.(f(x1), 1) == f(partials.(x1, 1))
+        @test partials.(f(x1), 2) == f(partials.(x1, 2))
     end
 
     f = x -> real(fft([x; 0; 0])[1])
@@ -36,6 +38,12 @@ using AbstractFFTs: complexfloat, realfloat
 end
 
 @testset "r2r" begin
+    x1 = Dual.(1:4.0, 2:5, 3:6)
+
+    @test value.(FFTW.r2r(x1, FFTW.R2HC)) == FFTW.r2r(value.(x1), FFTW.R2HC)
+    @test partials.(FFTW.r2r(x1, FFTW.R2HC), 1) == FFTW.r2r(partials.(x1, 1), FFTW.R2HC)
+    @test partials.(FFTW.r2r(x1, FFTW.R2HC), 2) == FFTW.r2r(partials.(x1, 2), FFTW.R2HC)
+
     f = ω -> FFTW.r2r([ω; zeros(9)], FFTW.R2HC)[1]
     @test derivative(f, 0.1) ≡ 1.0
 end
