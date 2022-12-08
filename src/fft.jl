@@ -46,3 +46,4 @@ for P in (:Plan, :ScaledPlan)  # need ScaledPlan to avoid ambiguities
 end
 
 mul!(y::AbstractArray{<:Dual}, p::Plan, x::AbstractArray{<:Dual}) = copyto!(y, p*x)
+mul!(y::AbstractArray{<:Complex{<:Dual}}, p::Plan, x::AbstractArray{<:Complex{<:Dual}}) = copyto!(y, p*x)
