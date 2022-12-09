@@ -60,6 +60,10 @@ end
         @test partials.(fft(A, 2), 1) == fft(partials.(A, 1), 2)
         @test partials.(fft(A, 2), 2) == fft(partials.(A, 2), 2)
     end
+
+    c1 = complex.(x1)
+    @test mul!(similar(c1), FFTW.plan_fft(x1), x1) == fft(x1)
+    @test mul!(similar(c1), FFTW.plan_fft(c1), c1) == fft(c1)
 end
 
 @testset "r2r" begin
