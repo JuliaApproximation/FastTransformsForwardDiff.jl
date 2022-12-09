@@ -1,7 +1,7 @@
 name = "FastTransformsForwardDiff"
 uuid = "77fa7db0-1c81-401d-9fde-3592fc42b8bc"
 authors = ["Sheehan Olver <solver@mac.com>"]
-version = "0.0.1"
+version = "0.0.2"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
